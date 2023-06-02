@@ -1,6 +1,9 @@
 import fastify from 'fastify'
+import { pokemonRoutes } from './routes/pokemon'
 
 const app = fastify()
+
+app.register(pokemonRoutes)
 
 app
   .listen({
