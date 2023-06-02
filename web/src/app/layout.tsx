@@ -17,9 +17,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body
-        className={`${pressStart2P.variable} h-screen w-screen flex flex-col justify-center items-center bg-secondBackground font-sans text-gray-800`}
+        className={`${pressStart2P.variable} bg-slate-600 font-sans text-gray-800`}
       >
-        {children}
+        <main className="flex h-screen w-screen flex-col items-center justify-start">
+          {children}
+        </main>
       </body>
     </html>
   )
