@@ -88,7 +88,7 @@ export async function pokemonRoutes(app: FastifyInstance) {
         const weaknesses = weaknessesEng.map((type) => translate(type))
         const resistances = resistancesEng.map((type) => translate(type))
 
-        const image = sprites.other['official-artwork'].front_default
+        const image = sprites.front_default
         const primaryType = translate(types[0].type.name)
         const secondaryType = translate(types[1].type.name)
 
@@ -124,7 +124,7 @@ export async function pokemonRoutes(app: FastifyInstance) {
       const weaknesses = weaknessesEng.map((type) => translate(type))
       const resistances = resistancesEng.map((type) => translate(type))
 
-      const image = sprites.other['official-artwork'].front_default
+      const image = sprites.front_default
       const primaryType = translate(types[0].type.name)
 
       return {

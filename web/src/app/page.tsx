@@ -14,6 +14,7 @@ import { LineBurger } from '@/components/LineBurger'
 import { ThinButton } from '@/components/ThinButton'
 import { TypeScreen } from '@/components/TypeScreen'
 import { SearchBar } from '@/components/SearchBar'
+import { NavButton } from '@/components/NavButton'
 
 import { api } from '@/lib/api'
 
@@ -25,8 +26,8 @@ export interface PokemonProps {
   secondaryType?: string
   weaknesses: Array<string>
   resistances: Array<string>
-  height: string
-  weight: string
+  height: number
+  weight: number
 }
 
 export default function Home() {
@@ -131,7 +132,7 @@ export default function Home() {
             </div>
             <div className="grid grid-rows-[40%_60%]">
               <div className="flex items-start justify-start">
-                <div className="ml-[7px] h-[25px] w-[25px] rounded-[50%] border-2 border-solid border-black bg-mainButtons" />
+                <button className="ml-[7px] h-[25px] w-[25px] rounded-[50%] border-2 border-solid border-black bg-mainButtons active:bg-[#3d3d3d]" />
                 <div className="ml-[7px] flex w-[100px] justify-around">
                   <div className="h-[5px] w-[35px] rounded-xl border-[1.5px] border-solid border-black bg-[#c90000]" />
                   <div className="h-[5px] w-[35px] rounded-xl border-[1.5px] border-solid border-black bg-[#3298cb]" />
@@ -141,51 +142,10 @@ export default function Home() {
                 <div className="flex h-full w-[50%] justify-between justify-self-center font-serif text-xl text-black" />
                 <NameScreen name={pokemon?.name ?? ''} />
                 <div className="relative top-[-30px] flex flex-col items-center justify-center">
-                  <div
-                    title="nav-button"
-                    className="flex h-[52px] w-[52px] items-center justify-center"
-                  >
-                    <div
-                      title="nav-center-circle"
-                      className="z-[+2] h-[7px] w-[7px] rounded-full border border-solid border-black"
-                    />
-                    <div
-                      title="nav-button-horizontal"
-                      className="absolute h-[16px] w-[52px] rounded-[5px] border-2 border-solid border-black bg-mainButtons"
-                    >
-                      <button
-                        onClick={decreaseId}
-                        title="button-left"
-                        className="absolute left-0 top-0 h-full w-[26px]"
-                      />
-                      <button
-                        onClick={increaseId}
-                        title="button-right"
-                        className="absolute right-0 top-0 h-full w-[26px]"
-                      />
-                    </div>
-                    <div
-                      title="nav-button-vertical"
-                      className="absolute h-[16px] w-[52px] rotate-90 rounded-[5px] border-2 border-solid border-black bg-mainButtons"
-                    >
-                      <button
-                        title="button-top"
-                        className="absolute left-0 top-0 h-full w-[26px]"
-                      />
-                      <button
-                        title="button-bottom"
-                        className="absolute right-0 top-0 h-full w-[26px]"
-                      />
-                      <div
-                        title="border-top"
-                        className="absolute left-[18px] right-[18px] top-[-3px] border-t-[3.5px] border-solid border-mainButtons"
-                      />
-                      <div
-                        title="border-bottom"
-                        className="absolute left-[18px] right-[18px] top-[11px] border-t-[3.5px] border-solid border-mainButtons"
-                      />
-                    </div>
-                  </div>
+                  <NavButton
+                    onClickIncrease={increaseId}
+                    onClickDecrease={decreaseId}
+                  />
                 </div>
               </div>
             </div>
@@ -205,7 +165,8 @@ export default function Home() {
             </div>
             <div className="flex items-center justify-center">
               <div className="flex h-[64px] w-[146px] items-center justify-center break-words rounded-[4px] border-2 border-solid border-black bg-secondScreen pl-[6px] pr-[2px] text-left text-[9px] leading-4">
-                altura: 70cm peso: 6.9kg
+                altura: {pokemon ? pokemon?.height / 10 : ''}m peso:{' '}
+                {pokemon ? pokemon?.weight / 10 : ''}kg
               </div>
             </div>
             <div className="flex items-center justify-center">
@@ -262,7 +223,6 @@ export default function Home() {
             >
               <Linkedin />
             </Link>
-            {/* Adicione mais ícones/link aqui */}
           </div>
         </div>
       </footer>
