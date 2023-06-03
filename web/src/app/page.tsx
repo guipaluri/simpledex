@@ -1,22 +1,85 @@
+'use client'
+
+import Link from 'next/link'
+import { useState } from 'react'
 import { Github, Linkedin } from 'lucide-react'
 
-import { LineBurger } from '@/components/LineBurger'
+import { Logo } from '@/components/Logo'
 import { NameScreen } from '@/components/NameScreen'
-import { NavButton } from '@/components/NavButton'
+import { PokemonPicture } from '@/components/PokemonPicture'
 import { SmallRedLight } from '@/components/SmallRedLight'
 import { SquaredBlueButton } from '@/components/SquaredBlueButton'
 import { SquaredWhiteButton } from '@/components/SquaredWhiteButton'
+import { LineBurger } from '@/components/LineBurger'
 import { ThinButton } from '@/components/ThinButton'
 import { TypeScreen } from '@/components/TypeScreen'
 import { SearchBar } from '@/components/SearchBar'
-import { Logo } from '@/components/Logo'
-import Link from 'next/link'
+
+import { api } from '@/lib/api'
+
+export interface PokemonProps {
+  id: number
+  name: string
+  image: string
+  primaryType: string
+  secondaryType?: string
+  weaknesses: Array<string>
+  resistances: Array<string>
+  height: string
+  weight: string
+}
 
 export default function Home() {
+  let [pokemon, setPokemon] = useState<PokemonProps | null>(null)
+
+  function handlePokemon(pokemon: PokemonProps) {
+    setPokemon(pokemon)
+  }
+
+  async function increaseId(event: any) {
+    if (pokemon) {
+      if (pokemon.id < 1010) {
+        pokemon = { ...pokemon, id: pokemon.id + 1 }
+
+        const response = await api.get(`/pokemon/${pokemon.id}`)
+        pokemon = response.data
+
+        setPokemon(pokemon)
+      } else {
+        pokemon = { ...pokemon, id: 1 }
+
+        const response = await api.get(`/pokemon/${pokemon.id}`)
+        pokemon = response.data
+
+        setPokemon(pokemon)
+      }
+    }
+  }
+
+  async function decreaseId(event: any) {
+    if (pokemon) {
+      if (pokemon.id > 1) {
+        pokemon = { ...pokemon, id: pokemon.id - 1 }
+
+        const response = await api.get(`/pokemon/${pokemon.id}`)
+        pokemon = response.data
+
+        setPokemon(pokemon)
+      } else {
+        pokemon = { ...pokemon, id: 1010 }
+
+        const response = await api.get(`/pokemon/${pokemon.id}`)
+        pokemon = response.data
+
+        setPokemon(pokemon)
+      }
+    }
+  }
+
   return (
     <div>
       <Logo />
-      <SearchBar />
+      <SearchBar onPokemonReceived={handlePokemon} />
       <div className="flex items-center justify-center">
         <div className="flex h-[342px] w-[456px] justify-self-center rounded-xl">
           <div className="box-border grid h-full w-1/2 grid-rows-[23%_50%_27%] rounded-bl-xl rounded-tl-xl rounded-tr-lg border-[3px] border-solid border-black bg-mainBackground">
@@ -52,7 +115,7 @@ export default function Home() {
                   <div className="mr-[7px] h-[7px] w-[7px] rounded-[50%] border border-solid border-black bg-[#c90000]" />
                   <div className="mr-[7px] h-[7px] w-[7px] rounded-[50%] border border-solid border-black bg-[#c90000]" />
                 </div>
-                <div className="h-full w-[80%] justify-self-center rounded-[5%] border-2 border-solid border-black bg-mainScreen bg-[url('https://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png')] bg-contain bg-center bg-no-repeat" />
+                <PokemonPicture image={pokemon?.image ?? ''} />
                 <div className="mt-[3px] flex w-[75%] items-center justify-between justify-self-center">
                   <div className="h-[16px] w-[16px] rounded-full border-2 border-solid  border-black bg-[#c90000]">
                     <div className="relative left-[1px] top-[1px] h-[5px] w-[5px] rounded-full bg-[#fe98cb]" />
@@ -76,9 +139,53 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-[27%_35%_38%]">
                 <div className="flex h-full w-[50%] justify-between justify-self-center font-serif text-xl text-black" />
-                <NameScreen name="Bulbasaur" />
+                <NameScreen name={pokemon?.name ?? ''} />
                 <div className="relative top-[-30px] flex flex-col items-center justify-center">
-                  <NavButton />
+                  <div
+                    title="nav-button"
+                    className="flex h-[52px] w-[52px] items-center justify-center"
+                  >
+                    <div
+                      title="nav-center-circle"
+                      className="z-[+2] h-[7px] w-[7px] rounded-full border border-solid border-black"
+                    />
+                    <div
+                      title="nav-button-horizontal"
+                      className="absolute h-[16px] w-[52px] rounded-[5px] border-2 border-solid border-black bg-mainButtons"
+                    >
+                      <button
+                        onClick={decreaseId}
+                        title="button-left"
+                        className="absolute left-0 top-0 h-full w-[26px]"
+                      />
+                      <button
+                        onClick={increaseId}
+                        title="button-right"
+                        className="absolute right-0 top-0 h-full w-[26px]"
+                      />
+                    </div>
+                    <div
+                      title="nav-button-vertical"
+                      className="absolute h-[16px] w-[52px] rotate-90 rounded-[5px] border-2 border-solid border-black bg-mainButtons"
+                    >
+                      <button
+                        title="button-top"
+                        className="absolute left-0 top-0 h-full w-[26px]"
+                      />
+                      <button
+                        title="button-bottom"
+                        className="absolute right-0 top-0 h-full w-[26px]"
+                      />
+                      <div
+                        title="border-top"
+                        className="absolute left-[18px] right-[18px] top-[-3px] border-t-[3.5px] border-solid border-mainButtons"
+                      />
+                      <div
+                        title="border-bottom"
+                        className="absolute left-[18px] right-[18px] top-[11px] border-t-[3.5px] border-solid border-mainButtons"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -98,7 +205,7 @@ export default function Home() {
             </div>
             <div className="flex items-center justify-center">
               <div className="flex h-[64px] w-[146px] items-center justify-center break-words rounded-[4px] border-2 border-solid border-black bg-secondScreen pl-[6px] pr-[2px] text-left text-[9px] leading-4">
-                Height: 70cm Weight: 6.9kg
+                altura: 70cm peso: 6.9kg
               </div>
             </div>
             <div className="flex items-center justify-center">
@@ -137,8 +244,8 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center justify-around">
-              <TypeScreen type="Planta" />
-              <TypeScreen type="Venenoso" />
+              <TypeScreen type={pokemon?.primaryType} />
+              <TypeScreen type={pokemon?.secondaryType} />
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import got from 'got'
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import { translate } from '../utils/translate'
 
 interface PokemonParams {
   pokemon: string
@@ -14,15 +15,15 @@ function compareArrays(
   array2: Array<string>,
   array3: Array<string>,
 ) {
-  const weaknesses = array1.filter(
+  const weaknessesEng = array1.filter(
     (weakness) => !array2.includes(weakness) && !array3.includes(weakness),
   )
 
-  const resistances = array2.filter(
+  const resistancesEng = array2.filter(
     (resistance) => !array1.includes(resistance),
   )
 
-  return { weaknesses, resistances }
+  return { weaknessesEng, resistancesEng }
 }
 
 export async function pokemonRoutes(app: FastifyInstance) {
@@ -34,7 +35,7 @@ export async function pokemonRoutes(app: FastifyInstance) {
     ) => {
       const { pokemon } = req.params
 
-      const { id, name, types, height, weight } = await got(
+      const { id, name, types, height, weight, sprites } = await got(
         `https://pokeapi.co/api/v2/pokemon/${pokemon}`,
         // @ts-ignore
       ).json()
@@ -78,17 +79,25 @@ export async function pokemonRoutes(app: FastifyInstance) {
           noDamageUnique.push(type.name),
         )
 
-        const { weaknesses, resistances } = compareArrays(
+        const { weaknessesEng, resistancesEng } = compareArrays(
           weaknessesUnique,
           resistancesUnique,
           noDamageUnique,
         )
 
+        const weaknesses = weaknessesEng.map((type) => translate(type))
+        const resistances = resistancesEng.map((type) => translate(type))
+
+        const image = sprites.other['official-artwork'].front_default
+        const primaryType = translate(types[0].type.name)
+        const secondaryType = translate(types[1].type.name)
+
         return {
           id,
           name,
-          primaryType: types[0].type.name,
-          secondaryType: types[1].type.name,
+          image,
+          primaryType,
+          secondaryType,
           weaknesses,
           resistances,
           height,
@@ -101,21 +110,28 @@ export async function pokemonRoutes(app: FastifyInstance) {
         // @ts-ignore
       ).json()
 
-      const weaknesses: string[] = []
-      const resistances: string[] = []
+      const weaknessesEng: string[] = []
+      const resistancesEng: string[] = []
 
       type.damage_relations.double_damage_from.forEach((type: TypeProps) =>
-        weaknesses.push(type.name),
+        weaknessesEng.push(type.name),
       )
 
       type.damage_relations.half_damage_from.forEach((type: TypeProps) =>
-        resistances.push(type.name),
+        resistancesEng.push(type.name),
       )
+
+      const weaknesses = weaknessesEng.map((type) => translate(type))
+      const resistances = resistancesEng.map((type) => translate(type))
+
+      const image = sprites.other['official-artwork'].front_default
+      const primaryType = translate(types[0].type.name)
 
       return {
         id,
         name,
-        primaryType: types[0].type.name,
+        image,
+        primaryType,
         weaknesses,
         resistances,
         height,

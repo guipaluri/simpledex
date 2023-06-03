@@ -10,7 +10,7 @@ export function NameScreen(props: NameScreenProps) {
     >
       <span
         title="name-screen"
-        className="w-full break-words text-center text-[8px]"
+        className="w-full break-words text-center text-[7.5px]"
       >
         {props.name}
       </span>
