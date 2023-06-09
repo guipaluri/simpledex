@@ -1,5 +1,5 @@
 interface PokemonPictureProps {
-  image: string
+  image: string | null
 }
 
 export function PokemonPicture(props: PokemonPictureProps) {

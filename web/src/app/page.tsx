@@ -21,38 +21,52 @@ import { api } from '@/lib/api'
 export interface PokemonProps {
   id: number
   name: string
-  image: string
+  imageDisplay: string
+  imageFront: string
+  imageBack: string
+  imageFemale: string
+  imageBackFemale: string
+  imageShiny: string
+  imageBackShiny: string
+  imageShinyFemale: string
+  imageBackShinyFemale: string
   primaryType: string
+  primaryTypePT: string
   secondaryType?: string
+  secondaryTypePT?: string
   weaknesses: Array<string>
+  weaknessesPT: Array<string>
   resistances: Array<string>
+  resistancesPT: Array<string>
   height: number
   weight: number
 }
 
 export default function Home() {
-  let [pokemon, setPokemon] = useState<PokemonProps | null>(null)
+  const [pokemon, setPokemon] = useState<PokemonProps | null>(null)
+  const [pokemonDisplay, setPokemonDisplay] = useState<string | null>(null)
+  const [isShiny, setIsShiny] = useState<boolean>(false)
+  // const [isFemale, setIsFemale] = useState<boolean>(false)
 
   function handlePokemon(pokemon: PokemonProps) {
     setPokemon(pokemon)
+    setPokemonDisplay(pokemon.imageFront)
   }
 
   async function increaseId(event: any) {
     if (pokemon) {
       if (pokemon.id < 1010) {
-        pokemon = { ...pokemon, id: pokemon.id + 1 }
+        const response = await api.get(`/pokemon/${pokemon.id + 1}`)
+        const updatedPokemon = response.data
 
-        const response = await api.get(`/pokemon/${pokemon.id}`)
-        pokemon = response.data
-
-        setPokemon(pokemon)
+        setPokemon(updatedPokemon)
+        setPokemonDisplay(updatedPokemon?.imageFront ?? '')
       } else {
-        pokemon = { ...pokemon, id: 1 }
+        const response = await api.get(`/pokemon/1`)
+        const updatedPokemon = response.data
 
-        const response = await api.get(`/pokemon/${pokemon.id}`)
-        pokemon = response.data
-
-        setPokemon(pokemon)
+        setPokemon(updatedPokemon)
+        setPokemonDisplay(updatedPokemon?.imageFront ?? '')
       }
     }
   }
@@ -60,20 +74,40 @@ export default function Home() {
   async function decreaseId(event: any) {
     if (pokemon) {
       if (pokemon.id > 1) {
-        pokemon = { ...pokemon, id: pokemon.id - 1 }
+        const response = await api.get(`/pokemon/${pokemon.id - 1}`)
+        const updatedPokemon = response.data
 
-        const response = await api.get(`/pokemon/${pokemon.id}`)
-        pokemon = response.data
-
-        setPokemon(pokemon)
+        setPokemon(updatedPokemon)
+        setPokemonDisplay(updatedPokemon?.imageFront ?? '')
       } else {
-        pokemon = { ...pokemon, id: 1010 }
+        const response = await api.get(`/pokemon/1010`)
+        const updatedPokemon = response.data
 
-        const response = await api.get(`/pokemon/${pokemon.id}`)
-        pokemon = response.data
-
-        setPokemon(pokemon)
+        setPokemon(updatedPokemon)
+        setPokemonDisplay(updatedPokemon?.imageFront ?? '')
       }
+    }
+  }
+
+  async function faceFront(event: any) {
+    if (pokemon) {
+      setPokemonDisplay(pokemon.imageFront)
+    }
+  }
+
+  async function faceBack(event: any) {
+    if (pokemon) {
+      setPokemonDisplay(pokemon.imageBack)
+    }
+  }
+
+  async function shiny(event: any) {
+    if (pokemon && !isShiny) {
+      setPokemonDisplay(pokemon.imageShiny)
+      setIsShiny(true)
+    } else if (pokemon && isShiny) {
+      setPokemonDisplay(pokemon.imageFront)
+      setIsShiny(false)
     }
   }
 
@@ -116,7 +150,7 @@ export default function Home() {
                   <div className="mr-[7px] h-[7px] w-[7px] rounded-[50%] border border-solid border-black bg-[#c90000]" />
                   <div className="mr-[7px] h-[7px] w-[7px] rounded-[50%] border border-solid border-black bg-[#c90000]" />
                 </div>
-                <PokemonPicture image={pokemon?.image ?? ''} />
+                <PokemonPicture image={pokemon ? pokemonDisplay : ''} />
                 <div className="mt-[3px] flex w-[75%] items-center justify-between justify-self-center">
                   <div className="h-[16px] w-[16px] rounded-full border-2 border-solid  border-black bg-[#c90000]">
                     <div className="relative left-[1px] top-[1px] h-[5px] w-[5px] rounded-full bg-[#fe98cb]" />
@@ -145,6 +179,8 @@ export default function Home() {
                   <NavButton
                     onClickIncrease={increaseId}
                     onClickDecrease={decreaseId}
+                    onClickFront={faceFront}
+                    onClickBack={faceBack}
                   />
                 </div>
               </div>
@@ -165,8 +201,11 @@ export default function Home() {
             </div>
             <div className="flex items-center justify-center">
               <div className="flex h-[64px] w-[146px] items-center justify-center break-words rounded-[4px] border-2 border-solid border-black bg-secondScreen pl-[6px] pr-[2px] text-left text-[9px] leading-4">
-                altura: {pokemon ? pokemon?.height / 10 : ''}m peso:{' '}
-                {pokemon ? pokemon?.weight / 10 : ''}kg
+                {pokemon
+                  ? `altura: ${pokemon?.height / 10}m peso: ${
+                      pokemon?.weight / 10
+                    }kg`
+                  : ''}
               </div>
             </div>
             <div className="flex items-center justify-center">
@@ -190,8 +229,8 @@ export default function Home() {
                   <SmallRedLight />
                 </div>
                 <div className="flex items-center justify-center">
-                  <SquaredWhiteButton />
-                  <SquaredWhiteButton />
+                  <SquaredWhiteButton onClickShiny={shiny} />
+                  <SquaredWhiteButton onClickShiny={shiny} />
                 </div>
               </div>
               <div className="grid">
@@ -205,8 +244,8 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center justify-around">
-              <TypeScreen type={pokemon?.primaryType} />
-              <TypeScreen type={pokemon?.secondaryType} />
+              <TypeScreen type={pokemon?.primaryTypePT} />
+              <TypeScreen type={pokemon?.secondaryTypePT} />
             </div>
           </div>
         </div>

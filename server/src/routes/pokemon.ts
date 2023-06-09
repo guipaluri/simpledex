@@ -15,15 +15,15 @@ function compareArrays(
   array2: Array<string>,
   array3: Array<string>,
 ) {
-  const weaknessesEng = array1.filter(
+  const weaknesses = array1.filter(
     (weakness) => !array2.includes(weakness) && !array3.includes(weakness),
   )
 
-  const resistancesEng = array2.filter(
+  const resistances = array2.filter(
     (resistance) => !array1.includes(resistance),
   )
 
-  return { weaknessesEng, resistancesEng }
+  return { weaknesses, resistances }
 }
 
 export async function pokemonRoutes(app: FastifyInstance) {
@@ -79,27 +79,50 @@ export async function pokemonRoutes(app: FastifyInstance) {
           noDamageUnique.push(type.name),
         )
 
-        const { weaknessesEng, resistancesEng } = compareArrays(
+        const { weaknesses, resistances } = compareArrays(
           weaknessesUnique,
           resistancesUnique,
           noDamageUnique,
         )
 
-        const weaknesses = weaknessesEng.map((type) => translate(type))
-        const resistances = resistancesEng.map((type) => translate(type))
+        const weaknessesPT = weaknesses.map((type) => translate(type))
+        const resistancesPT = resistances.map((type) => translate(type))
 
-        const image = sprites.front_default
-        const primaryType = translate(types[0].type.name)
-        const secondaryType = translate(types[1].type.name)
+        const imageFront = sprites.front_default
+        const imageBack = sprites.back_default
+        const imageFemale = sprites.front_female
+        const imageBackFemale = sprites.back_female
+        const imageShiny = sprites.front_shiny
+        const imageBackShiny = sprites.back_shiny
+        const imageShinyFemale = sprites.front_shiny_female
+        const imageBackShinyFemale = sprites.back_shiny_female
+        const primaryType = types[0].type.name
+        const primaryTypePT = translate(types[0].type.name)
+        const secondaryType = types[1].type.name
+        const secondaryTypePT = translate(types[1].type.name)
+
+        const imageDisplay = sprites.front_default
 
         return {
           id,
           name,
-          image,
+          imageDisplay,
+          imageFront,
+          imageBack,
+          imageFemale,
+          imageBackFemale,
+          imageShiny,
+          imageBackShiny,
+          imageShinyFemale,
+          imageBackShinyFemale,
           primaryType,
+          primaryTypePT,
           secondaryType,
+          secondaryTypePT,
           weaknesses,
+          weaknessesPT,
           resistances,
+          resistancesPT,
           height,
           weight,
         }
@@ -110,30 +133,51 @@ export async function pokemonRoutes(app: FastifyInstance) {
         // @ts-ignore
       ).json()
 
-      const weaknessesEng: string[] = []
-      const resistancesEng: string[] = []
+      const weaknesses: string[] = []
+      const resistances: string[] = []
 
       type.damage_relations.double_damage_from.forEach((type: TypeProps) =>
-        weaknessesEng.push(type.name),
+        weaknesses.push(type.name),
       )
 
       type.damage_relations.half_damage_from.forEach((type: TypeProps) =>
-        resistancesEng.push(type.name),
+        resistances.push(type.name),
       )
 
-      const weaknesses = weaknessesEng.map((type) => translate(type))
-      const resistances = resistancesEng.map((type) => translate(type))
+      const weaknessesPT = weaknesses.map((type) => translate(type))
+      const resistancesPT = resistances.map((type) => translate(type))
 
-      const image = sprites.front_default
-      const primaryType = translate(types[0].type.name)
+      const imageFront = sprites.front_default
+      const imageBack = sprites.back_default
+      const imageFemale = sprites.front_female
+      const imageBackFemale = sprites.back_female
+      const imageShiny = sprites.front_shiny
+      const imageBackShiny = sprites.back_shiny
+      const imageShinyFemale = sprites.front_shiny_female
+      const imageBackShinyFemale = sprites.back_shiny_female
+      const primaryType = types[0].type.name
+      const primaryTypePT = translate(types[0].type.name)
+
+      const imageDisplay = sprites.front_default
 
       return {
         id,
         name,
-        image,
+        imageDisplay,
+        imageFront,
+        imageBack,
+        imageFemale,
+        imageBackFemale,
+        imageShiny,
+        imageBackShiny,
+        imageShinyFemale,
+        imageBackShinyFemale,
         primaryType,
+        primaryTypePT,
         weaknesses,
+        weaknessesPT,
         resistances,
+        resistancesPT,
         height,
         weight,
       }
