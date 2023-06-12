@@ -9,12 +9,13 @@ import { NameScreen } from '@/components/NameScreen'
 import { PokemonPicture } from '@/components/PokemonPicture'
 import { SmallRedLight } from '@/components/SmallRedLight'
 import { SquaredBlueButton } from '@/components/SquaredBlueButton'
-import { SquaredWhiteButton } from '@/components/SquaredWhiteButton'
 import { LineBurger } from '@/components/LineBurger'
 import { ThinButton } from '@/components/ThinButton'
 import { TypeScreen } from '@/components/TypeScreen'
 import { SearchBar } from '@/components/SearchBar'
 import { NavButton } from '@/components/NavButton'
+import { ShinyButton } from '@/components/ShinyButton'
+import { FemaleButton } from '@/components/FemaleButton'
 
 import { api } from '@/lib/api'
 
@@ -46,11 +47,24 @@ export default function Home() {
   const [pokemon, setPokemon] = useState<PokemonProps | null>(null)
   const [pokemonDisplay, setPokemonDisplay] = useState<string | null>(null)
   const [isShiny, setIsShiny] = useState<boolean>(false)
-  // const [isFemale, setIsFemale] = useState<boolean>(false)
+  const [isFemale, setIsFemale] = useState<boolean>(false)
 
   function handlePokemon(pokemon: PokemonProps) {
     setPokemon(pokemon)
-    setPokemonDisplay(pokemon.imageFront)
+
+    if (isShiny) {
+      if (isFemale) {
+        setPokemonDisplay(pokemon.imageShinyFemale ?? pokemon.imageShiny)
+      } else {
+        setPokemonDisplay(pokemon.imageShiny)
+      }
+    } else {
+      if (isFemale) {
+        setPokemonDisplay(pokemon.imageFemale ?? pokemon.imageFront)
+      } else {
+        setPokemonDisplay(pokemon.imageFront)
+      }
+    }
   }
 
   async function increaseId(event: any) {
@@ -60,13 +74,34 @@ export default function Home() {
         const updatedPokemon = response.data
 
         setPokemon(updatedPokemon)
-        setPokemonDisplay(updatedPokemon?.imageFront ?? '')
+
+        if (isFemale) {
+          if (isShiny) {
+            setPokemonDisplay(
+              updatedPokemon?.imageShinyFemale ?? updatedPokemon?.imageShiny,
+            )
+          } else {
+            setPokemonDisplay(
+              updatedPokemon?.imageFemale ?? updatedPokemon?.imageFront,
+            )
+          }
+        } else {
+          if (isShiny) {
+            setPokemonDisplay(updatedPokemon?.imageShiny ?? '')
+          } else {
+            setPokemonDisplay(updatedPokemon?.imageFront ?? '')
+          }
+        }
       } else {
         const response = await api.get(`/pokemon/1`)
         const updatedPokemon = response.data
 
         setPokemon(updatedPokemon)
-        setPokemonDisplay(updatedPokemon?.imageFront ?? '')
+        if (isShiny) {
+          setPokemonDisplay(updatedPokemon?.imageShiny ?? '')
+        } else {
+          setPokemonDisplay(updatedPokemon?.imageFront ?? '')
+        }
       }
     }
   }
@@ -78,36 +113,121 @@ export default function Home() {
         const updatedPokemon = response.data
 
         setPokemon(updatedPokemon)
-        setPokemonDisplay(updatedPokemon?.imageFront ?? '')
+
+        if (isFemale) {
+          if (isShiny) {
+            setPokemonDisplay(
+              updatedPokemon?.imageShinyFemale ?? updatedPokemon?.imageShiny,
+            )
+          } else {
+            setPokemonDisplay(
+              updatedPokemon?.imageFemale ?? updatedPokemon?.imageFront,
+            )
+          }
+        } else {
+          if (isShiny) {
+            setPokemonDisplay(updatedPokemon?.imageShiny ?? '')
+          } else {
+            setPokemonDisplay(updatedPokemon?.imageFront ?? '')
+          }
+        }
       } else {
         const response = await api.get(`/pokemon/1010`)
         const updatedPokemon = response.data
 
         setPokemon(updatedPokemon)
-        setPokemonDisplay(updatedPokemon?.imageFront ?? '')
+        if (isShiny) {
+          setPokemonDisplay(updatedPokemon?.imageShiny ?? '')
+        } else {
+          setPokemonDisplay(updatedPokemon?.imageFront ?? '')
+        }
       }
     }
   }
 
   async function faceFront(event: any) {
     if (pokemon) {
-      setPokemonDisplay(pokemon.imageFront)
+      if (isShiny) {
+        if (isFemale) {
+          setPokemonDisplay(pokemon.imageShinyFemale ?? pokemon.imageShiny)
+        } else {
+          setPokemonDisplay(pokemon.imageShiny)
+        }
+      } else {
+        if (isFemale) {
+          setPokemonDisplay(pokemon.imageFemale ?? pokemon.imageFront)
+        } else {
+          setPokemonDisplay(pokemon.imageFront)
+        }
+      }
     }
   }
 
   async function faceBack(event: any) {
     if (pokemon) {
-      setPokemonDisplay(pokemon.imageBack)
+      if (isShiny) {
+        if (isFemale) {
+          setPokemonDisplay(
+            pokemon.imageBackShinyFemale ?? pokemon.imageBackShiny,
+          )
+        } else {
+          setPokemonDisplay(pokemon.imageBackShiny)
+        }
+      } else {
+        if (isFemale) {
+          setPokemonDisplay(pokemon.imageBackFemale ?? pokemon.imageBack)
+        } else {
+          setPokemonDisplay(pokemon.imageBack)
+        }
+      }
+    }
+  }
+
+  async function female(event: any) {
+    if (pokemon) {
+      if (isShiny) {
+        if (!isFemale) {
+          setPokemonDisplay(pokemon.imageShinyFemale ?? pokemon.imageShiny)
+          setIsFemale(true)
+        } else {
+          setPokemonDisplay(pokemon.imageShiny)
+          setIsFemale(false)
+        }
+      } else {
+        if (!isFemale) {
+          setPokemonDisplay(pokemon.imageFemale ?? pokemon.imageFront)
+          setIsFemale(true)
+        } else {
+          setPokemonDisplay(pokemon.imageFront)
+          setIsFemale(false)
+        }
+      }
+    } else {
+      setIsFemale((prevState) => !prevState)
     }
   }
 
   async function shiny(event: any) {
-    if (pokemon && !isShiny) {
-      setPokemonDisplay(pokemon.imageShiny)
-      setIsShiny(true)
-    } else if (pokemon && isShiny) {
-      setPokemonDisplay(pokemon.imageFront)
-      setIsShiny(false)
+    if (pokemon) {
+      if (isFemale) {
+        if (!isShiny) {
+          setPokemonDisplay(pokemon.imageShinyFemale ?? pokemon.imageShiny)
+          setIsShiny(true)
+        } else {
+          setPokemonDisplay(pokemon.imageFemale ?? pokemon.imageFront)
+          setIsShiny(false)
+        }
+      } else {
+        if (!isShiny) {
+          setPokemonDisplay(pokemon.imageShiny)
+          setIsShiny(true)
+        } else {
+          setPokemonDisplay(pokemon.imageFront)
+          setIsShiny(false)
+        }
+      }
+    } else {
+      setIsShiny((prevState) => !prevState)
     }
   }
 
@@ -229,8 +349,8 @@ export default function Home() {
                   <SmallRedLight />
                 </div>
                 <div className="flex items-center justify-center">
-                  <SquaredWhiteButton onClickShiny={shiny} />
-                  <SquaredWhiteButton onClickShiny={shiny} />
+                  <ShinyButton onClickShiny={shiny} />
+                  <FemaleButton onClickFemale={female} />
                 </div>
               </div>
               <div className="grid">
