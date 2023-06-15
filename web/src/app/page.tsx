@@ -48,6 +48,7 @@ export default function Home() {
   const [pokemonDisplay, setPokemonDisplay] = useState<string | null>(null)
   const [isShiny, setIsShiny] = useState<boolean>(false)
   const [isFemale, setIsFemale] = useState<boolean>(false)
+  const [isBackTurned, setIsBackTurned] = useState<boolean>(false)
 
   function handlePokemon(pokemon: PokemonProps) {
     setPokemon(pokemon)
@@ -161,6 +162,7 @@ export default function Home() {
         }
       }
     }
+    setIsBackTurned(false)
   }
 
   async function faceBack(event: any) {
@@ -181,24 +183,35 @@ export default function Home() {
         }
       }
     }
+    setIsBackTurned(true)
   }
 
   async function female(event: any) {
     if (pokemon) {
       if (isShiny) {
         if (!isFemale) {
-          setPokemonDisplay(pokemon.imageShinyFemale ?? pokemon.imageShiny)
+          isBackTurned
+            ? setPokemonDisplay(
+                pokemon.imageBackShinyFemale ?? pokemon.imageBackShiny,
+              )
+            : setPokemonDisplay(pokemon.imageShinyFemale ?? pokemon.imageShiny)
           setIsFemale(true)
         } else {
-          setPokemonDisplay(pokemon.imageShiny)
+          isBackTurned
+            ? setPokemonDisplay(pokemon.imageBackShiny)
+            : setPokemonDisplay(pokemon.imageShiny)
           setIsFemale(false)
         }
       } else {
         if (!isFemale) {
-          setPokemonDisplay(pokemon.imageFemale ?? pokemon.imageFront)
+          isBackTurned
+            ? setPokemonDisplay(pokemon.imageBackFemale ?? pokemon.imageBack)
+            : setPokemonDisplay(pokemon.imageFemale ?? pokemon.imageFront)
           setIsFemale(true)
         } else {
-          setPokemonDisplay(pokemon.imageFront)
+          isBackTurned
+            ? setPokemonDisplay(pokemon.imageBack)
+            : setPokemonDisplay(pokemon.imageFront)
           setIsFemale(false)
         }
       }
@@ -211,18 +224,28 @@ export default function Home() {
     if (pokemon) {
       if (isFemale) {
         if (!isShiny) {
-          setPokemonDisplay(pokemon.imageShinyFemale ?? pokemon.imageShiny)
+          isBackTurned
+            ? setPokemonDisplay(
+                pokemon.imageBackShinyFemale ?? pokemon.imageBackShiny,
+              )
+            : setPokemonDisplay(pokemon.imageShinyFemale ?? pokemon.imageShiny)
           setIsShiny(true)
         } else {
-          setPokemonDisplay(pokemon.imageFemale ?? pokemon.imageFront)
+          isBackTurned
+            ? setPokemonDisplay(pokemon.imageBackFemale ?? pokemon.imageBack)
+            : setPokemonDisplay(pokemon.imageFemale ?? pokemon.imageFront)
           setIsShiny(false)
         }
       } else {
         if (!isShiny) {
-          setPokemonDisplay(pokemon.imageShiny)
+          isBackTurned
+            ? setPokemonDisplay(pokemon.imageBackShiny)
+            : setPokemonDisplay(pokemon.imageShiny)
           setIsShiny(true)
         } else {
-          setPokemonDisplay(pokemon.imageFront)
+          isBackTurned
+            ? setPokemonDisplay(pokemon.imageBack)
+            : setPokemonDisplay(pokemon.imageFront)
           setIsShiny(false)
         }
       }

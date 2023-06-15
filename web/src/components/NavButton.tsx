@@ -41,12 +41,12 @@ export const NavButton: React.FC<NavButtonProps> = (props) => {
         <button
           title="button-top"
           onClick={onClickBack}
-          className="absolute left-0 top-0 h-full w-[26px] rounded-bl-[3px] rounded-tl-[3px] active:bg-[#3d3d3d]"
+          className="absolute left-0 top-0 h-full w-[26px] rounded-bl-[3px] rounded-tl-[3px] active:w-[15px] active:bg-[#3d3d3d]"
         />
         <button
           title="button-bottom"
           onClick={onClickFront}
-          className="absolute right-0 top-0 h-full w-[26px] rounded-br-[3px] rounded-tr-[3px] active:bg-[#3d3d3d]"
+          className="absolute right-0 top-0 h-full w-[26px] rounded-br-[3px] rounded-tr-[3px] active:w-[15px] active:bg-[#3d3d3d]"
         />
         <div
           title="border-top"
