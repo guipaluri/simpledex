@@ -32,7 +32,7 @@ export const ShinyButton: React.FC<ShinyButtonProps> = (props) => {
     <button
       title="white-square"
       onClick={handleClick}
-      className={`z-10 flex h-[25px] w-[25px] items-center justify-center rounded-[5px] border-2 border-solid border-black bg-white shadow-[inset_-2px_-2px_gray] active:bg-gray-300 active:shadow-[inset_-2px_-2px_#61686b]`}
+      className="z-10 flex h-[25px] w-[25px] items-center justify-center rounded-[5px] border-2 border-solid border-black bg-white shadow-[inset_-2px_-2px_gray] active:bg-gray-300 active:shadow-[inset_-2px_-2px_#61686b]"
     >
       {iconButton}
     </button>

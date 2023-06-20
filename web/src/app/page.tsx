@@ -18,6 +18,7 @@ import { ShinyButton } from '@/components/ShinyButton'
 import { FemaleButton } from '@/components/FemaleButton'
 
 import { api } from '@/lib/api'
+import { InfoScreen } from '@/components/InfoScreen'
 
 export interface PokemonProps {
   id: number
@@ -49,6 +50,7 @@ export default function Home() {
   const [isShiny, setIsShiny] = useState<boolean>(false)
   const [isFemale, setIsFemale] = useState<boolean>(false)
   const [isBackTurned, setIsBackTurned] = useState<boolean>(false)
+  const [buttonPressed, setButtonPressed] = useState<string | null>(null)
 
   function handlePokemon(pokemon: PokemonProps) {
     setPokemon(pokemon)
@@ -66,6 +68,12 @@ export default function Home() {
         setPokemonDisplay(pokemon.imageFront)
       }
     }
+
+    setButtonPressed('hash')
+  }
+
+  const handleButtonPress = (icon: string) => {
+    setButtonPressed(icon)
   }
 
   async function increaseId(event: any) {
@@ -104,6 +112,7 @@ export default function Home() {
           setPokemonDisplay(updatedPokemon?.imageFront ?? '')
         }
       }
+      setIsBackTurned(false)
     }
   }
 
@@ -143,6 +152,7 @@ export default function Home() {
           setPokemonDisplay(updatedPokemon?.imageFront ?? '')
         }
       }
+      setIsBackTurned(false)
     }
   }
 
@@ -342,27 +352,49 @@ export default function Home() {
                 />
               </svg>
             </div>
-            <div className="flex items-center justify-center">
-              <div className="flex h-[64px] w-[146px] items-center justify-center break-words rounded-[4px] border-2 border-solid border-black bg-secondScreen pl-[6px] pr-[2px] text-left text-[9px] leading-4">
-                {pokemon
-                  ? `altura: ${pokemon?.height / 10}m peso: ${
-                      pokemon?.weight / 10
-                    }kg`
-                  : ''}
-              </div>
-            </div>
+            <InfoScreen buttonPressed={buttonPressed} pokemonInfo={pokemon} />
             <div className="flex items-center justify-center">
               <div className="grid h-[60px] w-[146px] grid-cols-[repeat(5,_1fr)] grid-rows-[repeat(2,_1fr)]">
-                <SquaredBlueButton />
-                <SquaredBlueButton />
-                <SquaredBlueButton />
-                <SquaredBlueButton />
-                <SquaredBlueButton />
-                <SquaredBlueButton />
-                <SquaredBlueButton />
-                <SquaredBlueButton />
-                <SquaredBlueButton />
-                <SquaredBlueButton />
+                <SquaredBlueButton
+                  icon={'hash'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'generation'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'region'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'resistances'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'weaknesses'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'height'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'weight'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'legendary'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'mythical'}
+                  onButtonPress={handleButtonPress}
+                />
+                <SquaredBlueButton
+                  icon={'initial'}
+                  onButtonPress={handleButtonPress}
+                />
               </div>
             </div>
             <div className="flex justify-around">
